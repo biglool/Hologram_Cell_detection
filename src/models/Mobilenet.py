@@ -93,7 +93,3 @@ def build_model(input_shape, load_weights=True):
 
 
   return model
-
-input_shape= (256, 384)
-model =build_model(input_shape)
-model.summary()
