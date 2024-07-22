@@ -87,9 +87,3 @@ def get_model_basic_seg(input_shape):
     # Create the model
     model = models.Model(inputs, outputs)
     return model
-
-img_shape = (256,256, 1)
-model = get_model_basic_seg(img_shape)
-
-# Summary of the model
-model.summary()
