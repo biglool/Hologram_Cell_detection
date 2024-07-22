@@ -1,5 +1,5 @@
 from sklearn.utils import class_weight
-from CustomsLoses import jaccard_loss,specificity, pixel_accuracy,dice_coef_loss,iou,focal_loss
+from holo_cells.src.training.CustomsLoses import jaccard_loss,specificity, pixel_accuracy,dice_coef_loss,iou,focal_loss
 import tensorflow as tf
 import keras
 
