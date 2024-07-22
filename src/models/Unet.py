@@ -62,6 +62,3 @@ def build_unet_model():
    unet_model = tf.keras.Model(inputs, outputs, name="U-Net")
 
    return unet_model
-
-model = build_unet_model()
-model.summary()
