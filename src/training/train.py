@@ -3,7 +3,7 @@ from holo_cells.src.training.CustomsLoses import jaccard_loss,specificity, pixel
 import tensorflow as tf
 import keras
 
-def train(model, ruta_model, train_gen,val_gen):
+def train(model, ruta_model, train_gen,val_gen, lr=1e-4, ee_patience= 17, reduce_patience=4 ):
     model.compile(
         optimizer=keras.optimizers.Adam(1e-4), loss=jaccard_loss,#dice_coef_loss,#"binary_crossentropy",#1e-4,, , adamW,weight_decay=0.01
         metrics=[
@@ -22,8 +22,8 @@ def train(model, ruta_model, train_gen,val_gen):
 
     callbacks = [
         keras.callbacks.ModelCheckpoint(ruta_model, save_best_only=True),
-        keras.callbacks.EarlyStopping(monitor='val_loss', patience=17),
-        keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=4, verbose=1)
+        keras.callbacks.EarlyStopping(monitor='val_loss', patience=ee_patience),
+        keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=reduce_patience, verbose=1)
     ]
 
     # Train the model, doing validation at the end of each epoch.
