@@ -1,6 +1,6 @@
 from tensorflow.keras.layers import Input, Conv2D, DepthwiseConv2D, BatchNormalization, ReLU, ZeroPadding2D, UpSampling2D, Dropout
 from tensorflow.keras.models import Model
-from tensorflow.keras.applications import resnet18
+
 
 
 def create_mobilenet_encoder(input):
