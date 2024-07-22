@@ -8,7 +8,7 @@ import cv2
 import matplotlib as plt
 from matplotlib import patches
 from scipy.ndimage import zoom
-from unxip_auxiliars import propagator_planar_fresnel, ift2_dc,ft2_dc
+from holo_cells.src.Generador_datos.unxip_auxiliars import propagator_planar_fresnel, ift2_dc,ft2_dc
 
 
 def genera_guarda_holograma(id,carpeta_base,carpeta,min_prof,max_prof,img_size,margin, mount):
