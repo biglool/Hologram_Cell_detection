@@ -9,7 +9,7 @@ from sklearn.cluster import DBSCAN
 import matplotlib.patches as patches
 import time
 import keras
-
+from CustomsLoses import jaccard_loss,specificity, pixel_accuracy,dice_coef_loss,iou,focal_loss
 
 class Detector():
   def __init__(self,modelo,original_shape_cut=(1024,1536),model_shape=(256,384),step_size=(128,128), cellCluster_size=80, min_confidence=0.5):
