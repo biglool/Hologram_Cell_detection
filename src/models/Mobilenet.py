@@ -1,5 +1,6 @@
-from tensorflow.keras.layers import Input, Conv2D, DepthwiseConv2D, BatchNormalization, ReLU, ZeroPadding2D, UpSampling2D, Dropout
+from tensorflow.keras.layers import Input, Conv2D, DepthwiseConv2D, BatchNormalization, ReLU, ZeroPadding2D, UpSampling2D, Dropout, Conv2DTranspose
 from tensorflow.keras.models import Model
+from tensorflow.keras.applications import MobileNet
 
 
 
