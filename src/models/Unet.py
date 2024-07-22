@@ -27,9 +27,9 @@ def upsample_block(x, conv_features, n_filters):
    x = double_conv_block(x, n_filters)
    return x
 
-def build_unet_model():
+def build_unet_model( input_shape= (256,384,1)):
     # inputs
-   inputs = layers.Input(shape=(256,384,1))
+   inputs = layers.Input(shape=input_shape)
 
    # encoder: contracting path - downsample
    # 1 - downsample
