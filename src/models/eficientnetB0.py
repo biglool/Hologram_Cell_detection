@@ -49,8 +49,3 @@ def eficientnet_seg(input_shape=(512, 512, 1)):
 
     model = Model(inputs, outputs)
     return model
-
-
-
-model = eficientnet_seg(input_shape=(256, 384, 1))
-model.summary()
