@@ -11,7 +11,7 @@ from scipy.ndimage import zoom
 from holo_cells.src.Generador_datos.unxip_auxiliars import propagator_planar_fresnel, ift2_dc,ft2_dc
 
 
-def genera_guarda_holograma(id,carpeta_base,carpeta,min_prof,max_prof,img_size,margin, mount):
+def genera_guarda_holograma(id,carpeta_base,carpeta,min_prof,max_prof,min_size, max_size,img_size,margin, mount):
 
 
     measured_image_sumada = np.zeros((img_size[1],img_size[0]))
@@ -24,7 +24,7 @@ def genera_guarda_holograma(id,carpeta_base,carpeta,min_prof,max_prof,img_size,m
       num_parts=np.random.randint(3, 6)
 
 
-      particles=generate_random_cells(num_parts, img_size, margin,prof, 14,11,0.5)
+      particles=generate_random_cells(num_parts, img_size, margin,prof, max_size,min_size,0.5)
 
       mount['distance_display_sample']=prof
 
