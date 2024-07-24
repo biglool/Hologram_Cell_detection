@@ -84,7 +84,7 @@ def evalua_imatge_real(detector, mostra, analisis_path, uid):
                     rect = patches.Rectangle((x+25, y+25), width, height, linewidth=1, edgecolor='g', facecolor='none')
                     ax.add_patch(rect)
             plt.show()
-            print("original boxes:" +str(original_boxes))
+            print("predicted boxes:" +str(original_boxes))
             print("annoted boxes:" +str(annoted_boxes))
 
 
