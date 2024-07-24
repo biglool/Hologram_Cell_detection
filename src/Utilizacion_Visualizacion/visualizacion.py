@@ -143,8 +143,8 @@ def evalua_imatge_real(detector, mostra, analisis_path, uid):
 
         # Visualizing the confusion matrix using Seaborn
         plt.figure(figsize=(8, 6))
-        sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=["Predicted Positive", "Predicted Negative"], yticklabels=["Actual Positive", "Actual Negative"])
+        sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=["Actual Positive", "Actual Negative"], yticklabels=["Predicted Positive", "Predicted Negative"])
         plt.title("Confusion Matrix")
-        plt.xlabel("Predicted")
-        plt.ylabel("Actual")
+        plt.ylabel("Predicted")
+        plt.xlabel("Actual")
         plt.show()
