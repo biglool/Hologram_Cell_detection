@@ -5,7 +5,7 @@ from tensorflow.keras.utils import get_custom_objects
 implementaciones otras loses para keras
 '''
 
-
+@keras.saving.register_keras_serializable()
 @tf.keras.utils.register_keras_serializable()
 def dice_coef_loss(y_true, y_pred):
     smooth = 1.0
@@ -17,7 +17,7 @@ def dice_coef_loss(y_true, y_pred):
 # Register the custom loss function
 get_custom_objects().update({"dice_coef_loss": dice_coef_loss})
 
-
+@keras.saving.register_keras_serializable()
 @tf.keras.utils.register_keras_serializable()
 def tversky_loss(y_true, y_pred, alpha=0.5, beta=2):
     # Convert predictions to probabilities
@@ -36,7 +36,7 @@ def tversky_loss(y_true, y_pred, alpha=0.5, beta=2):
     return 1 - tversky_index
 get_custom_objects().update({"tversky_loss": tversky_loss})
 
-
+@keras.saving.register_keras_serializable()
 @tf.keras.utils.register_keras_serializable()
 def iou(y_true, y_pred, smooth=1):
     intersection = K.sum(K.abs(y_true * y_pred), axis=[1,2,3])
@@ -45,6 +45,7 @@ def iou(y_true, y_pred, smooth=1):
     return iou
 get_custom_objects().update({"iou": iou})
 
+@keras.saving.register_keras_serializable()
 @tf.keras.utils.register_keras_serializable()
 def jaccard_loss(y_true, y_pred):
     y_true = K.flatten(y_true)
@@ -54,6 +55,7 @@ def jaccard_loss(y_true, y_pred):
     return 1 - (intersection + 1) / (union + 1)
 get_custom_objects().update({"jaccard_loss": jaccard_loss})
 
+@keras.saving.register_keras_serializable()
 @tf.keras.utils.register_keras_serializable()
 def pixel_accuracy(y_true, y_pred):
     y_pred = K.round(y_pred)
@@ -62,7 +64,7 @@ def pixel_accuracy(y_true, y_pred):
     return (correct_pixels / total_pixels)
 get_custom_objects().update({"pixel_accuracy": pixel_accuracy})
 
-
+@keras.saving.register_keras_serializable()
 @tf.keras.utils.register_keras_serializable()
 def specificity(y_true, y_pred):
     y_true = tf.cast(y_true, tf.int32)
@@ -78,6 +80,7 @@ def specificity(y_true, y_pred):
     return specificity
 get_custom_objects().update({"specificity": specificity})
 
+@keras.saving.register_keras_serializable()
 @tf.keras.utils.register_keras_serializable()
 def focal_loss(y_true, y_pred):
         gamma=2.,
@@ -101,6 +104,7 @@ def focal_loss(y_true, y_pred):
 
 get_custom_objects().update({"focal_loss": focal_loss})
 
+@keras.saving.register_keras_serializable()
 @tf.keras.utils.register_keras_serializable()
 def combined_loss(y_true, y_pred):
     # Binary cross-entropy loss
@@ -110,3 +114,5 @@ def combined_loss(y_true, y_pred):
     dice = 1 - (2 * tf.reduce_sum(y_true * y_pred) + 1) / (tf.reduce_sum(y_true) + tf.reduce_sum(y_pred) + 1)
 
     return bce + dice
+
+get_custom_objects().update({"combined_loss": focal_loss})
