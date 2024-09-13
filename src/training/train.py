@@ -34,6 +34,6 @@ def train(model, ruta_model, train_gen,val_gen, lr=1e-4, ee_patience= 17, reduce
         validation_data=val_gen,
         callbacks=callbacks,
         verbose=1,
-        class_weight = {0:1,1:10}
+        #class_weight = {0:1,1:10} # aprentemente da problemas con algunos modelos
     )
     return history
