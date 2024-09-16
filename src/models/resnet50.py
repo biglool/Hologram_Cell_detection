@@ -10,8 +10,9 @@ def resnet_segmentation_model(input_shape=(512, 512, 1)):
     inputs = Input(input_shape)
     dropout= 0.5
 
-    x = Lambda(lambda x: tf.repeat(x, repeats=3, axis=-1))(inputs)
-
+    #x = Lambda(lambda x: tf.repeat(x, repeats=3, axis=-1))(inputs)
+    x = Conv2D(3, (1, 1), padding='same',use_bias=False, activation='relu')(inputs)
+    
     base_model = ResNet50(include_top=False,  weights="imagenet")
     base_output = base_model(x)
 
