@@ -7,11 +7,12 @@ from tensorflow.keras.applications import VGG16
 def vggl6_seg(input_shape=(512, 512, 1)):
 
     inputs = Input(input_shape)
-    dropout= 0.5
+    dropout= 0.2
 
     # Duplicate the single channel to three channels
-    x = Lambda(lambda x: tf.repeat(x, repeats=3, axis=-1))(inputs)
-
+    #x = Lambda(lambda x: tf.repeat(x, repeats=3, axis=-1))(inputs)
+    x = Conv2D(3, (1, 1), padding='same',use_bias=False, activation='relu')(input)
+    
     base_model =  VGG16(include_top=False, weights="imagenet")  # Use VGG16 as the base model
     base_output = base_model
 
