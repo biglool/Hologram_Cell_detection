@@ -10,6 +10,7 @@ def resnet_segmentation_model18(input_shape=(512, 512, 1)):
     dropout= 0.3
 
     #x = Lambda(lambda x: tf.repeat(x, repeats=3, axis=-1))(inputs)
+    #
     x = Conv2D(3, (1, 1), padding='same',use_bias=False, activation='relu')(inputs)
     
     base_model =  ResNet18Backbone()
