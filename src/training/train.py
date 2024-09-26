@@ -14,8 +14,8 @@ def train(model, ruta_model, train_gen,val_gen, lr=1e-4, ee_patience= 17, reduce
         pixel_accuracy,
         dice_coef_loss,
         tf.keras.metrics.BinaryIoU( target_class_ids=(0, 1), threshold=0.5, name=None, dtype=None),
-        iou,
-        focal_loss
+        #iou,
+        #focal_loss
 
     ]
     )
