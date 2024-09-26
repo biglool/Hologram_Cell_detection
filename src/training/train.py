@@ -3,9 +3,9 @@ from holo_cells.src.training.CustomsLoses import jaccard_loss,specificity, pixel
 import tensorflow as tf
 import keras
 
-def train(model, ruta_model, train_gen,val_gen, lr=1e-4, ee_patience= 17, reduce_patience=4 ):
+def train(model, ruta_model, train_gen,val_gen, lr=1e-4, ee_patience= 17, w_dec=1e-6, reduce_patience=4 ):
     model.compile(
-        optimizer=keras.optimizers.Adam(lr), loss=jaccard_loss,#dice_coef_loss,#"binary_crossentropy",#1e-4,, , adamW,weight_decay=0.01
+        optimizer=keras.optimizers.Adam(lr,weight_decay=w_dec), loss=jaccard_loss,#dice_coef_loss,#"binary_crossentropy",#1e-4,, , adamW,weight_decay=0.01
         metrics=[
         jaccard_loss,
         tf.keras.metrics.Recall() ,
@@ -34,6 +34,7 @@ def train(model, ruta_model, train_gen,val_gen, lr=1e-4, ee_patience= 17, reduce
         validation_data=val_gen,
         callbacks=callbacks,
         verbose=1,
+        
         #class_weight = {0:1,1:10} # aprentemente da problemas con algunos modelos
     )
     return history
