@@ -23,7 +23,7 @@ def train(model, ruta_model, train_gen,val_gen, lr=1e-4, ee_patience= 17, reduce
     callbacks = [
         keras.callbacks.ModelCheckpoint(ruta_model, save_best_only=True),
         keras.callbacks.EarlyStopping(monitor='val_loss', patience=ee_patience),
-        keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=reduce_patience, verbose=1)
+        keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=reduce_patience, verbose=0)
     ]
 
     # Train the model, doing validation at the end of each epoch.
