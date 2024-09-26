@@ -10,7 +10,7 @@ def eficientnet_seg(input_shape=(512, 512, 1)):
     dropout= 0.1
 
     # Duplicate the single channel to three channels
-    x = Lambda(lambda x: tf.repeat(x, repeats=3, axis=-1))(inputs)
+    x = Conv2D(3, (1, 1), padding='same',use_bias=False, activation='relu')(inputs)
 
     base_model =  EfficientNetB0(include_top=False, weights="imagenet")  # Use VGG16 as the base model
     base_output = base_model
