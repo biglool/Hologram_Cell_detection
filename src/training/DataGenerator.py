@@ -19,6 +19,7 @@ from PIL import Image
 
 class DataGenerator(Sequence):
     def __init__(self, data_folder, ground_truth_folder, batch_size, img_shape, shuffle=True, data_augmentation=False,max_examples=0):
+        super().__init__()
         self.data_folder = data_folder
         self.ground_truth_folder = ground_truth_folder
         self.batch_size = batch_size
