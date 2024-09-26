@@ -259,3 +259,146 @@ def scale_array( array):
         scaled_array = 2 * (array - min_val) / (max_val - min_val) - 1
         return scaled_array
 
+
+
+
+def generate_circle_particle(grid_size=40, border_width=5, mid_value=0.5 ):
+    # Calculate the radius and center (20.5, 20.5)
+    radius = grid_size // 2
+    center = (radius - 0.5, radius - 0.5)
+
+    # Create a grid of zeros
+    grid = np.zeros((grid_size, grid_size))
+
+    # Populate the grid with 1s for the border and 0.5 for the inside of the circle
+    for x in range(grid_size):
+        for y in range(grid_size):
+            dist_squared = (x - center[0])**2 + (y - center[1])**2
+            # Border points (with configurable thickness)
+            if (radius - border_width)**2 <= dist_squared <= radius**2:
+                grid[x, y] = 1
+            # Inside the circle
+            elif dist_squared < (radius - border_width)**2:
+                grid[x, y] = mid_value
+
+    return grid
+
+
+import numpy as np
+import random
+from scipy.spatial import ConvexHull
+from skimage.draw import polygon
+import math
+
+def generate_random_shape(grid_size=40, num_points=20, border_width=4, radius_variation=0.2):
+    # Create an empty grid
+    grid = np.zeros((grid_size, grid_size))
+    
+    # Center of the shape
+    center_x, center_y = grid_size // 2, grid_size // 2
+    
+    # Generate random points around the center within a certain radius
+    points = []
+    base_radius = grid_size // 3  # Radius for generating points
+    for _ in range(num_points):
+        angle = random.uniform(0, 2 * np.pi)  # Spread points in all directions
+        # Limit the radius variation to make the shape more round
+        r = base_radius * (1 + random.uniform(-radius_variation, radius_variation))
+        x = center_x + r * np.cos(angle)
+        y = center_y + r * np.sin(angle)
+        points.append([x, y])
+    
+    points = np.array(points)
+    
+    # Get the convex hull of the points to form a closed shape
+    hull = ConvexHull(points)
+    hull_points = points[hull.vertices]
+    
+    # Create a filled polygon from the hull points
+    rr, cc = polygon(hull_points[:, 0], hull_points[:, 1], grid.shape)
+    grid[rr, cc] = 0.2  # Fill inside the shape with 0.5
+    
+    # Border: apply a simple dilation or offset to create the border effect
+    border_mask = np.zeros_like(grid)
+    rr, cc = polygon(hull_points[:, 0], hull_points[:, 1], grid.shape)
+    border_mask[rr, cc] = 1
+    
+    # Apply border width by adding the border as 1 around the shape
+    from scipy.ndimage import binary_dilation
+    for _ in range(border_width):
+        border_mask = binary_dilation(border_mask)
+    
+    grid[border_mask == 1] = 1
+    
+    return grid
+
+
+
+
+def generate_ellipse_particle(grid_size=40, r_x=20, r_y=15, border_width=6, mid_value=0.7, angle=45):
+    # Center of the ellipse (20.5, 20.5)
+    center = (grid_size // 2 - 0.5, grid_size // 2 - 0.5)
+
+    # Convert the rotation angle to radians
+    angle_rad = math.radians(angle)
+
+    # Create a grid of zeros
+    grid = np.zeros((grid_size, grid_size))
+
+    # Populate the grid with 1s for the border and 0.5 for the inside of the ellipse
+    for x in range(grid_size):
+        for y in range(grid_size):
+            # Translate the grid points to be relative to the center
+            x_trans = x - center[0]
+            y_trans = y - center[1]
+
+            # Apply rotation to the translated coordinates
+            x_rot = x_trans * math.cos(angle_rad) - y_trans * math.sin(angle_rad)
+            y_rot = x_trans * math.sin(angle_rad) + y_trans * math.cos(angle_rad)
+
+            # Calculate the distance in the rotated space using the ellipse equation
+            dist = (x_rot**2 / r_x**2) + (y_rot**2 / r_y**2)
+
+            # Border points (with configurable thickness)
+            if 1 - (border_width / min(r_x, r_y)) <= dist <= 1:
+                grid[x, y] = 1
+            # Inside the ellipse
+            elif dist < 1 - (border_width / min(r_x, r_y)):
+                grid[x, y] = mid_value
+
+    return grid
+
+def  genera_mascara2( img_size, borde=100, n_particles=10, tamany=60, particle_type="basic"):
+   # Define some data:
+  N = img_size[0]
+  M = img_size[1]
+
+  new_mask = np.zeros((N, M))
+
+  for part in range(n_particles):
+    # define random position
+    x=np.random.randint(borde, N-borde)
+    y=np.random.randint(borde, M-borde)
+
+    #chose particle type
+    if particle_type=="basic":
+      particle = generate_circle_particle(grid_size=tamany)
+    elif particle_type=="ellipse":
+      particle = generate_ellipse_particle(grid_size=tamany, angle= np.random.randint(0,360))
+    elif particle_type== "randomshape":
+      particle =generate_random_shape(grid_size=tamany, num_points=12, border_width=2)
+
+
+    # add particle
+    x_len=particle.shape[0]
+    y_len=particle.shape[1]
+    off_x=int(x_len/2)
+    off_y=int(y_len/2)
+    mask = particle > 0
+    new_mask[x:x+x_len, y:y+y_len][mask] += particle[mask]
+
+  #fix values between 0 and 1
+  new_mask=np.clip(new_mask, 0, 1)
+  return new_mask
+
+
