@@ -105,7 +105,7 @@ def focal_loss(y_true, y_pred):
 get_custom_objects().update({"focal_loss": focal_loss})
 
 #@keras.saving.register_keras_serializable()
-@tf.keras.utils.register_keras_serializable()
+'''@tf.keras.utils.register_keras_serializable()
 def combined_loss(y_true, y_pred):
     # Binary cross-entropy loss
     bce = tf.keras.losses.BinaryCrossentropy()(y_true, y_pred)
@@ -116,3 +116,4 @@ def combined_loss(y_true, y_pred):
     return bce + dice
 
 get_custom_objects().update({"combined_loss": focal_loss})
+'''
