@@ -1,6 +1,6 @@
 from tensorflow.keras.layers import Input, Conv2D, DepthwiseConv2D, BatchNormalization, ReLU, ZeroPadding2D, UpSampling2D, Dropout, Conv2DTranspose
 from tensorflow.keras.models import Model
-from tensorflow.keras.applications import MobileNet
+from tensorflow.keras.applications import MobileNet,MobileNetV2
 
 
 
@@ -90,6 +90,21 @@ def build_model(input_shape, load_weights=True):
       if layer.name in [l.name for l in pretrained_mobilenet.layers]:
           #print(f"Copying weights from {layer.name} to {model.get_layer(name=layer.name).name}")
           layer.set_weights(pretrained_mobilenet.get_layer(name=layer.name).get_weights())
+
+
+  return model
+    
+def build_model_v2(input_shape):
+
+  input_shape=(input_shape[0], input_shape[1], 1)
+  inputs = Input(input_shape)
+  x = Conv2D(3, (1, 1), padding='same',use_bias=False, activation='relu')(inputs)
+  base_model= MobileNetV2(include_top=False, weights='imagenet', input_shape=(256, 384, 3))
+  encoder= base_model(x)
+  decoder = create_decoder(encoder, transpose=False)
+  outputs = Conv2D(1, (1, 1), activation='sigmoid')(decoder)
+
+  model = Model(inputs, outputs)
 
 
   return model
