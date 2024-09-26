@@ -5,7 +5,7 @@ import keras
 
 def train(model, ruta_model, train_gen,val_gen, lr=1e-4, ee_patience= 17, reduce_patience=4 ):
     model.compile(
-        optimizer=keras.optimizers.Adam(1e-4), loss=jaccard_loss,#dice_coef_loss,#"binary_crossentropy",#1e-4,, , adamW,weight_decay=0.01
+        optimizer=keras.optimizers.Adam(lr), loss=jaccard_loss,#dice_coef_loss,#"binary_crossentropy",#1e-4,, , adamW,weight_decay=0.01
         metrics=[
         jaccard_loss,
         tf.keras.metrics.Recall() ,
