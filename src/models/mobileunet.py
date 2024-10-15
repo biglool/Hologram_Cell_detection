@@ -67,7 +67,7 @@ def mobileunet(pretrained_weights = None,input_size = (256,384,1)):
     conv10 = Conv2D(1, 1, activation='sigmoid')(conv9)
     
     model = Model(input = inputs, output = conv10)
-    model.compile(optimizer=Adam(lr=1e-3), loss='binary_crossentropy', metrics=['accuracy'])
+    #model.compile(optimizer=Adam(lr=1e-3), loss='binary_crossentropy', metrics=['accuracy'])
     
     if(pretrained_weights):
     	model.load_weights(pretrained_weights)
