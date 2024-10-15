@@ -4,7 +4,7 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from keras.models import Model
 from keras.optimizers import Adam
 
-def mobileunet(pretrained_weights = None,input_size = (256,256,1)):
+def mobileunet(pretrained_weights = None,input_size = (256,384,1)):
     inputs = Input(input_size)
 
     conv1  = SeparableConv2D(64, 3, activation='relu', padding='same')(inputs)
