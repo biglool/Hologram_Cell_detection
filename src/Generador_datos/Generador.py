@@ -377,8 +377,8 @@ def  genera_mascara2( img_size, borde=100, n_particles=10, tamany=60, particle_t
 
   for part in range(n_particles):
     # define random position
-    x=np.random.randint(borde, N-borde)
-    y=np.random.randint(borde, M-borde)
+    x=np.random.randint(borde, N-tamany)
+    y=np.random.randint(borde, M-tamany)
 
     #chose particle type
     if particle_type=="basic":
