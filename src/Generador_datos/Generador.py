@@ -368,6 +368,160 @@ def generate_ellipse_particle(grid_size=40, r_x=20, r_y=15, border_width=6, mid_
 
     return grid
 
+
+  
+def generate_random_shape2(grid_size=40, border_width=6, mid_value=0.5):
+    # Create a grid of zeros (transparent background)
+    grid = np.zeros((grid_size, grid_size))
+    
+    # Center of the grid
+    center = (grid_size // 2 - 0.5, grid_size // 2 - 0.5)
+    
+    def generate_ellipse(grid, r_x, r_y, angle):
+        angle_rad = math.radians(angle)
+        for x in range(grid_size):
+            for y in range(grid_size):
+                x_trans = x - center[0]
+                y_trans = y - center[1]
+
+                x_rot = x_trans * math.cos(angle_rad) - y_trans * math.sin(angle_rad)
+                y_rot = x_trans * math.sin(angle_rad) + y_trans * math.cos(angle_rad)
+
+                dist = (x_rot**2 / r_x**2) + (y_rot**2 / r_y**2)
+
+                if 1 - (border_width / min(r_x, r_y)) <= dist <= 1:
+                    grid[x, y] = 1  # Border is fully opaque
+                elif dist < 1 - (border_width / min(r_x, r_y)):
+                    grid[x, y] = mid_value  # Inside is semi-transparent
+
+    def generate_circle(grid, radius):
+        for x in range(grid_size):
+            for y in range(grid_size):
+                dist = ((x - center[0])**2 + (y - center[1])**2) ** 0.5
+                if radius - border_width <= dist <= radius:
+                    grid[x, y] = 1  # Border is fully opaque
+                elif dist < radius - border_width:
+                    grid[x, y] = mid_value  # Inside is semi-transparent
+
+    def generate_star(grid, num_points=5, outer_radius=15, inner_radius=7):
+        theta = np.linspace(0, 2 * np.pi, num_points * 2 + 1)
+        outer_vertices = [
+            (
+                center[0] + outer_radius * math.cos(angle), 
+                center[1] + outer_radius * math.sin(angle)
+            )
+            for angle in theta[::2]
+        ]
+        inner_vertices = [
+            (
+                center[0] + inner_radius * math.cos(angle), 
+                center[1] + inner_radius * math.sin(angle)
+            )
+            for angle in theta[1::2]
+        ]
+        vertices = [coord for pair in zip(outer_vertices, inner_vertices) for coord in pair]
+        polygon_fill(grid, vertices)
+
+    def generate_random_polygon(grid, num_vertices=6, radius=15):
+        angles = sorted([random.uniform(0, 2 * np.pi) for _ in range(num_vertices)])
+        vertices = [
+            (
+                center[0] + radius * math.cos(angle), 
+                center[1] + radius * math.sin(angle)
+            )
+            for angle in angles
+        ]
+        polygon_fill(grid, vertices)
+
+    def generate_rectangle(grid, width, height):
+        top_left = (center[0] - width // 2, center[1] - height // 2)
+        for x in range(grid_size):
+            for y in range(grid_size):
+                if top_left[0] <= x <= top_left[0] + width and top_left[1] <= y <= top_left[1] + height:
+                    if (
+                        x <= top_left[0] + border_width or 
+                        x >= top_left[0] + width - border_width or 
+                        y <= top_left[1] + border_width or 
+                        y >= top_left[1] + height - border_width
+                    ):
+                        grid[x, y] = 1  # Border is fully opaque
+                    else:
+                        grid[x, y] = mid_value  # Inside is semi-transparent
+
+    def generate_triangle(grid, size):
+        vertices = [
+            (center[0], center[1] - size // 2),  # Top vertex
+            (center[0] - size // 2, center[1] + size // 2),  # Bottom-left vertex
+            (center[0] + size // 2, center[1] + size // 2)  # Bottom-right vertex
+        ]
+        polygon_fill(grid, vertices)
+
+    def generate_blob(grid, max_radius=15):
+        num_points = 100  # More points make the blob smoother
+        theta = np.linspace(0, 2 * np.pi, num_points)
+        radii = [random.uniform(max_radius * 0.7, max_radius) for _ in range(num_points)]
+        vertices = [
+            (
+                center[0] + radii[i] * math.cos(angle), 
+                center[1] + radii[i] * math.sin(angle)
+            )
+            for i, angle in enumerate(theta)
+        ]
+        polygon_fill(grid, vertices)
+
+    def polygon_fill(grid, vertices):
+        """Fill the inside of a polygon using the even-odd rule."""
+        from matplotlib.path import Path
+
+        # Create a Path object
+        poly_path = Path(vertices)
+        
+        # Iterate through grid and fill points inside the polygon
+        for x in range(grid_size):
+            for y in range(grid_size):
+                if poly_path.contains_point((x, y)):
+                    grid[x, y] = mid_value  # Inside is semi-transparent
+
+    # Randomly select a shape type
+    shape_type = random.choice(['ellipse', 'circle', 'star', 'polygon', 'triangle', 'blob'])
+    
+    # Generate a shape that fills the grid
+    if shape_type == 'ellipse':
+        r_x = (grid_size // 2) - 2  # Maximize size within grid
+        r_y = (grid_size // 2) - 2
+        angle = random.uniform(0, 360)
+        generate_ellipse(grid, r_x, r_y, angle)
+
+    elif shape_type == 'circle':
+        radius = (grid_size // 2) - 2
+        generate_circle(grid, radius=radius)
+
+    elif shape_type == 'star':
+        num_points = random.randint(5, 8)
+        outer_radius = (grid_size // 2) - 2
+        inner_radius = random.randint(outer_radius // 2, outer_radius - 3)
+        generate_star(grid, num_points=num_points, outer_radius=outer_radius, inner_radius=inner_radius)
+
+    elif shape_type == 'polygon':
+        num_vertices = random.randint(5, 10)
+        radius = (grid_size // 2) - 2
+        generate_random_polygon(grid, num_vertices=num_vertices, radius=radius)
+
+    elif shape_type == 'rectangle':
+        width = grid_size - 4  # Max width
+        height = grid_size - 4  # Max height
+        generate_rectangle(grid, width=width, height=height)
+
+    elif shape_type == 'triangle':
+        size = grid_size - 4  # Max size
+        generate_triangle(grid, size=size)
+
+    elif shape_type == 'blob':
+        max_radius = (grid_size // 2) - 2  # Maximize blob size
+        generate_blob(grid, max_radius=max_radius)
+
+    return grid
+
 def  genera_mascara2( img_size, borde=100, n_particles=10, tamany=60, particle_type="basic"):
    # Define some data:
   N = img_size[0]
